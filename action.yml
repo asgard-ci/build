@@ -1,0 +1,29 @@
+name: "Build and Deploy"
+description: "Process to build and deploy a plugin"
+inputs:
+  build_dir:
+    description: "Buil"
+    required: true
+    default: "plugin/build/libs"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-java@v4
+      with:
+        java-version: 21
+        distribution: temurin
+
+    - shell: powershell
+      env:
+        JAVA_OPTS: -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=7890 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=7890
+      run: ./gradlew build --build-cache
+
+    - if: runner.os == 'Windows'
+      shell: cmd
+      env:
+        PROJ_NAME: ${{ github.event.repository.name }}
+      run: |
+        "S:\SacredCraft\SacredFrontierProject\dist.cmd" "${{ inputs.build_dir }}"
