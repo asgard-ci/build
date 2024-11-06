@@ -22,8 +22,8 @@ runs:
       run: ./gradlew build --build-cache
 
     - if: runner.os == 'Windows'
-      shell: cmd
+      shell: powershell
       env:
         PROJ_NAME: ${{ github.event.repository.name }}
       run: |
-        "S:\SacredCraft\SacredFrontierProject\dist.cmd" "${{ inputs.build_dir }}"
+        S:\SacredCraft\SacredFrontierProject\dist.cmd ${{ inputs.build_dir }}
